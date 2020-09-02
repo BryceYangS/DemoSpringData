@@ -11,6 +11,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Transient;
 import javax.transaction.Transactional;
 import java.rmi.StubNotFoundException;
+import java.util.HashSet;
 
 @Component
 @Transactional
@@ -28,7 +29,8 @@ public class JpaRunner implements ApplicationRunner {
 
         Study study = new Study();
         study.setName("Spring Data JPA");
-        study.setOwner(account);
+
+        account.getStudies().add(study);
 
         Session session = entityManager.unwrap(Session.class);
         session.save(account);

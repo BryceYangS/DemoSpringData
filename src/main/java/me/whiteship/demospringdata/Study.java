@@ -13,17 +13,6 @@ public class Study {
 
     private String name;
 
-    @ManyToOne
-    private Account owner;
-
-    public Account getOwner() {
-        return owner;
-    }
-
-    public void setOwner(Account owner) {
-        this.owner = owner;
-    }
-
     public Long getId() {
         return id;
     }
