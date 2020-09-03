@@ -2,7 +2,9 @@ package me.whiteship.demospringdata;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 public class Account {
@@ -21,15 +23,22 @@ public class Account {
     @Transient //컬럼 매핑 하지 않음
     private String no;
 
-//    @Embedded
-//    @AttributeOverrides()
-//    private Address homeAddress;
-
     @Embedded
     @AttributeOverrides({
             @AttributeOverride(name = "street", column = @Column(name = "home_street"))
     })
     private Address address;
+
+    @OneToMany(mappedBy = "owner")
+    private Set<Study> studies = new HashSet<>();
+
+    public Set<Study> getStudies() {
+        return studies;
+    }
+
+    public void setStudies(Set<Study> studies) {
+        this.studies = studies;
+    }
 
     public String getEmail() {
         return email;
@@ -54,4 +63,17 @@ public class Account {
     public void setPassword(String password) {
         this.password = password;
     }
+
+
+    // Convenient Method : 관계와 관련된 method
+    public void addStudy(Study study) {
+        this.getStudies().add(study);
+        study.setOwner(this);
+    }
+
+    public void removeStudy(Study study) {
+        this.getStudies().remove(study);
+        study.setOwner(null);
+    }
+
 }
