@@ -12,8 +12,7 @@ public class Post {
 
     private String title;
 
-//    @OneToMany(mappedBy = "post", cascade = CascadeType.PERSIST)
-    @OneToMany(mappedBy = "post", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL /*, fetch = FetchType.LAZY*/)
     private Set<Comment> comments = new HashSet<>();
 
     public void addComment(Comment comment){
