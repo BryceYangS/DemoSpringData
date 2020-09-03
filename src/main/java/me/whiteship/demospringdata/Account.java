@@ -29,7 +29,7 @@ public class Account {
     })
     private Address address;
 
-    @OneToMany
+    @OneToMany(mappedBy = "owner")
     private Set<Study> studies = new HashSet<>();
 
     public Set<Study> getStudies() {
@@ -63,4 +63,17 @@ public class Account {
     public void setPassword(String password) {
         this.password = password;
     }
+
+
+    // Convenient Method : 관계와 관련된 method
+    public void addStudy(Study study) {
+        this.getStudies().add(study);
+        study.setOwner(this);
+    }
+
+    public void removeStudy(Study study) {
+        this.getStudies().remove(study);
+        study.setOwner(null);
+    }
+
 }
