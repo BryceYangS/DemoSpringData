@@ -1,17 +1,17 @@
 package me.whiteship.demospringdata;
 
-import org.hibernate.Session;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
-import org.springframework.data.annotation.PersistenceConstructor;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Transient;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
-import java.rmi.StubNotFoundException;
-import java.util.HashSet;
+import java.util.List;
 
 @Component
 @Transactional
@@ -22,31 +22,23 @@ public class JpaRunner implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-
-//        Post post = new Post();
-//        post.setTitle("Spring Data JPA");
-//
-//        Comment comment = new Comment();
-//        comment.setComment("댓글 설리");
-//        post.addComment(comment);
-//
-//        Comment comment1 = new Comment();
-//        comment1.setComment("댓글 설리2");
-//        post.addComment(comment1);
-
-        Session session = entityManager.unwrap(Session.class);
-//        session.save(post);
-//        Post post = session.get(Post.class, 4l);
-//        System.out.println(post.getTitle());
+        //JPQL(HQL)
+        TypedQuery<Post> query = entityManager.createQuery("SELECT p FROM Post AS p", Post.class);
+        List<Post> posts = query.getResultList();
+        posts.forEach(System.out::println);
 
 
-//        Comment comment = session.get(Comment.class, 5l);
-//        System.out.println(comment.getComment());
-//        System.out.println(comment.getPost().getTitle() );
-        Post post = session.get(Post.class, 4l);
-        for (Comment comment : post.getComments()) {
-            System.out.println(comment.getComment());
-        }
+        //Criteria
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Post> criteria = builder.createQuery(Post.class);
+        Root<Post> root = criteria.from(Post.class);
+        criteria.select(root);
+        List<Post> typeSafePosts = entityManager.createQuery(criteria).getResultList();
+        posts.forEach(System.out::println);
 
+
+        //Native Query
+        List<Post> resultList = entityManager.createNativeQuery("select * from Post", Post.class).getResultList();
+        resultList.forEach(System.out::println);
     }
 }
