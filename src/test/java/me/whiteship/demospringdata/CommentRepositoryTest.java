@@ -7,6 +7,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -19,14 +20,27 @@ public class CommentRepositoryTest {
 
     @Test
     public void crud(){
-        Comment comment = new Comment();
-        comment.setComment("Hello Comment");
-        commentRepository.save(comment);
-        List<Comment> all = commentRepository.findAll();
-        assertThat(all.size()).isEqualTo(1);
+//        Optional<Comment> commnet = commentRepository.findById(100l);
+//        assertThat(commnet).isEmpty();
+//        commnet.isPresent();
+//        Comment comment = commnet.orElse(new Comment());
+//        commnet.orElseThrow(() -> new IllegalArgumentException());
+//        commnet.orElseThrow(IllegalArgumentException::new); // -> method reference
 
-        long count = commentRepository.count();
-        assertThat(count).isEqualTo(1);
+        /*
+            만약 Optional 사용하지 않으면 아래와 같이 Null 체크해야 함.
+         */
+//        Comment comment1 = commentRepository.findById(100l);
+//        if (comment1 == null) {
+//            throw new IllegalArgumentException();
+//        }
+
+//        List<Comment> comments = commentRepository.findAll();
+//        assertThat(comments).isEmpty();
+        commentRepository.save(null);
+
+
+
     }
 
 }
