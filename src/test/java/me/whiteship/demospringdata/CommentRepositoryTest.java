@@ -18,6 +18,9 @@ public class CommentRepositoryTest {
     @Autowired
     CommentRepository commentRepository;
 
+    @Autowired
+    Hosuk hosuk;
+
     @Test
     public void crud(){
 //        Optional<Comment> commnet = commentRepository.findById(100l);
@@ -37,10 +40,14 @@ public class CommentRepositoryTest {
 
 //        List<Comment> comments = commentRepository.findAll();
 //        assertThat(comments).isEmpty();
-        commentRepository.save(null);
 
+//        System.out.println("====================");
+//        System.out.println(hosuk);
+//
+//
+//        commentRepository.save(null);
 
-
+//        commentRepository.findByLikeGreaterThanAndPost(null);
     }
 
 }
