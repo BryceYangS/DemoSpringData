@@ -1,18 +1,20 @@
 package me.whiteship.demospringdata;
 
+import com.sun.istack.Nullable;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.util.concurrent.ListenableFuture;
+import org.springframework.util.concurrent.ListenableFutureCallback;
 
 import java.util.List;
-import java.util.stream.Stream;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.InstanceOfAssertFactories.list;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
@@ -31,26 +33,45 @@ public class CommentRepositoryTest {
         createComment(20, "test spring");
         createComment(10, "test spring2");
 
+        commentRepository.flush();
 
-        List<Comment> comments = commentRepository.findByCommentContainsIgnoreCaseAndLikeCountGreaterThan("Spring", 1);
-        assertThat(comments.size()).isEqualTo(4);
+        List<Comment> all = commentRepository.findAll();
+        assertThat(all.size()).isEqualTo(4);
 
-        List<Comment> comments1 = commentRepository.findByCommentContainsIgnoreCaseOrderByLikeCountDesc("Spring");
-        assertThat(comments1).first().hasFieldOrPropertyWithValue("likeCount", 100);
+//        Future<List<Comment>> future = commentRepository.findByCommentContains("spring");
+//        System.out.println("========");
+//        System.out.println("========" + future.isDone());
+//        List<Comment> comments = null; // 결과 나올 때 까지 기다림
+//        try {
+//            comments = future.get();
+//            comments.forEach(System.out::println);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        } catch (ExecutionException e) {
+//            e.printStackTrace();
+//        }
 
-        List<Comment> comment2 = commentRepository.findByCommentContainsIgnoreCaseOrderByLikeCountAsc("SPRING");
-        assertThat(comment2.size()).isEqualTo(4);
-        assertThat(comment2).first().hasFieldOrPropertyWithValue("likeCount", 10);
+        ListenableFuture<List<Comment>> listListenableFuture = commentRepository.findByCommentContainsIgnoreCase("spring");
+        System.out.println("========");
+        System.out.println("========" + listListenableFuture.isDone());
+        listListenableFuture.addCallback(new ListenableFutureCallback<List<Comment>>() {
+            @Override
+            public void onFailure(Throwable throwable) {
+                System.out.println(throwable);
+            }
 
+            @Override
+            public void onSuccess(@Nullable List<Comment> result) {
+                System.out.println("=========== Async =============");
+                result.forEach(System.out::println);
+                System.out.println(result.size());
+            }
+        });
 
-        PageRequest pageRequest = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "likeCount"));
-        Page<Comment> commentPage = commentRepository.findByCommentContainsIgnoreCase("spring", pageRequest);
-        assertThat(commentPage.getNumberOfElements()).isEqualTo(4);
-        assertThat(commentPage).first().hasFieldOrPropertyWithValue("likeCount", 100);
-
-        try( Stream<Comment> commentStream = commentRepository.findByCommentContainsIgnoreCase("spring") ) {
-            Comment comment = commentStream.findFirst().get();
-            assertThat(comment.getLikeCount()).isEqualTo(100);
+        try {
+            Thread.sleep(5000l);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
 
     }
