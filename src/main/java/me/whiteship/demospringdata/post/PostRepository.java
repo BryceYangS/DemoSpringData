@@ -4,6 +4,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface PostRepository extends JpaRepository<Post, Long>, PostCustomRepository<Post> {
+import me.whiteship.demospringdata.MyRepository;
+import me.whiteship.demospringdata.SimpleMyRepository;
+
+public interface PostRepository extends MyRepository<Post, Long> {
 
 }

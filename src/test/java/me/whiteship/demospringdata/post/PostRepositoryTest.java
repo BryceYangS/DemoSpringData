@@ -1,7 +1,9 @@
 package me.whiteship.demospringdata.post;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +21,12 @@ public class PostRepositoryTest {
 	public void crud() {
 		Post post = new Post();
 		post.setTitle("hibernate");
+
+		assertThat(postRepository.contains(post)).isFalse();
+
 		postRepository.save(post);
 
-		postRepository.findMyPost();
+		assertThat(postRepository.contains(post)).isTrue();
 
 		postRepository.delete(post);
 		postRepository.flush();
