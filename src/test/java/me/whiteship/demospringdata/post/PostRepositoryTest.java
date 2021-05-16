@@ -8,10 +8,16 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
+@Import(PostRepositoryTestConfig.class)
 public class PostRepositoryTest {
 
 	@Autowired
@@ -24,11 +30,13 @@ public class PostRepositoryTest {
 
 		assertThat(postRepository.contains(post)).isFalse();
 
-		postRepository.save(post);
+		// save 할 때 event 발생함
+		postRepository.save(post.publish());
 
 		assertThat(postRepository.contains(post)).isTrue();
 
 		postRepository.delete(post);
 		postRepository.flush();
 	}
+
 }

@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import me.whiteship.demospringdata.MyRepository;
 import me.whiteship.demospringdata.SimpleMyRepository;
 
-public interface PostRepository extends MyRepository<Post, Long> {
+public interface PostRepository extends MyRepository  <Post, Long> {
 
 }

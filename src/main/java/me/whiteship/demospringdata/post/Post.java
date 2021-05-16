@@ -6,8 +6,10 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.springframework.data.domain.AbstractAggregateRoot;
+
 @Entity
-public class Post {
+public class Post extends AbstractAggregateRoot<Post> {
 
     @Id @GeneratedValue
     private Long Id;
@@ -50,5 +52,10 @@ public class Post {
 
     public void setCreated(Date created) {
         this.created = created;
+    }
+
+    public Post publish() {
+        this.registerEvent(new PostPublishedEvent(this));
+        return this;
     }
 }
