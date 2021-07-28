@@ -12,11 +12,14 @@ public class Post {
     @Id @GeneratedValue
     private Long Id;
 
+    // 기본으로 vchar 255
     private String title;
 
+    // 기본으로 vchar 255가 넘는 것은 Lob 사용할 것
     @Lob
     private String content;
 
+    // Temporal은 날짜 일때 사용되는 어노테이션
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
 

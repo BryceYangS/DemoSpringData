@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @Transactional
+// 원래는 Impl 인 접두어가 붙어야 한다. Application.java 에서 접두어를 변경하여서 아래처럼 Default가 된 것이다.
 public class PostCustomRepositoryDefault implements PostCustomRepository<Post>{
 
 	@Autowired
@@ -18,6 +19,7 @@ public class PostCustomRepositoryDefault implements PostCustomRepository<Post>{
 	@Override
 	public List<Post> findMyPost() {
 		System.out.println("==== findMyPost======");
+		// JPQL 이라고 함
 		return entityManager.createQuery("SELECT p FROM Post AS p", Post.class).getResultList();
 	}
 
